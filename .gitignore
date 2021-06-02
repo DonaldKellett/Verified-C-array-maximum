@@ -6,3 +6,4 @@ Makefile.conf
 *.vo
 *.vok
 *.vos
+.*.cache

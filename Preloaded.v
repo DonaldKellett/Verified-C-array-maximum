@@ -14,7 +14,7 @@ Module Info.
   Definition bitsize := 32.
   Definition big_endian := false.
   Definition source_file := "maxarray.c"%string.
-  Definition normalized := false.
+  Definition normalized := true.
 End Info.
 
 Definition ___builtin_ais_annot : ident := 1%positive.
@@ -83,7 +83,7 @@ Definition f_maxarray := {|
   fn_callconv := cc_default;
   fn_params := ((_a, (tptr tuint)) :: (_n, tint) :: nil);
   fn_vars := nil;
-  fn_temps := ((_i, tint) :: (_m, tuint) :: nil);
+  fn_temps := ((_i, tint) :: (_m, tuint) :: (_t'1, tuint) :: nil);
   fn_body :=
 (Ssequence
   (Sset _i (Econst_int (Int.repr 0) tint))
@@ -93,16 +93,18 @@ Definition f_maxarray := {|
       (Swhile
         (Ebinop Olt (Etempvar _i tint) (Etempvar _n tint) tint)
         (Ssequence
-          (Sifthenelse (Ebinop Ogt
-                         (Ederef
-                           (Ebinop Oadd (Etempvar _a (tptr tuint))
-                             (Etempvar _i tint) (tptr tuint)) tuint)
-                         (Etempvar _m tuint) tint)
-            (Sset _m
+          (Ssequence
+            (Sset _t'1
               (Ederef
                 (Ebinop Oadd (Etempvar _a (tptr tuint)) (Etempvar _i tint)
                   (tptr tuint)) tuint))
-            Sskip)
+            (Sifthenelse (Ebinop Ogt (Etempvar _t'1 tuint)
+                           (Etempvar _m tuint) tint)
+              (Sset _m
+                (Ederef
+                  (Ebinop Oadd (Etempvar _a (tptr tuint)) (Etempvar _i tint)
+                    (tptr tuint)) tuint))
+              Sskip))
           (Sset _i
             (Ebinop Oadd (Etempvar _i tint) (Econst_int (Int.repr 1) tint)
               tint))))
@@ -417,6 +419,8 @@ Definition public_idents : list ident :=
 
 Definition prog : Clight.program := 
   mkprogram composites global_definitions public_idents _main Logic.I.
+
+
 
 (* END AST *)
 

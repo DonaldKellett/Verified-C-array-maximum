@@ -1,3 +1,3 @@
 # Verified-C-array-maximum
 
-A Codewars Kata idea. DO NOT MAKE PUBLIC
+A former Codewars Kata idea, now available under the [MIT License](./LICENSE)
